@@ -30,6 +30,7 @@
             <ul class="nav-links" id="navLinks">
                 <li><a href="#home" class="nav-link active">Home</a></li>
                 <li><a href="#menu" class="nav-link">Menu</a></li>
+                <li><a href="#order" class="nav-link">Quick Order</a></li>
                 <li><a href="#gallery" class="nav-link">Gallery</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
@@ -50,6 +51,7 @@
                 untamed spirit of the lion's den.</p>
             <div class="hero-buttons">
                 <a href="#menu" class="btn btn-primary">Explore the Menu</a>
+                <a href="#order" class="btn btn-secondary">Order Something Now</a>
                 <a href="#contact" class="btn btn-outline">Reserve a Table</a>
             </div>
         </div>
@@ -989,6 +991,159 @@
                         <h4>Live Acoustic Evenings</h4>
                         <p>Every Friday and Saturday, intimate live performances fill the cave with soulful melodies.
                         </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== QUICK ORDER SECTION ========== -->
+    <section class="order-section" id="order">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-label">Quick Dining</span>
+                <h2>Order <span class="highlight">Something Now</span></h2>
+                <p>Craving our culinary treasures? Order now and we'll prepare your feast with passion.</p>
+            </div>
+            <div class="order-grid">
+                <div class="order-form reveal">
+                    <h3>🍽️ Quick Order</h3>
+                    <form id="quickOrderForm">
+                        <div class="form-group">
+                            <label for="orderName">Full Name *</label>
+                            <input type="text" id="orderName" name="orderName" placeholder="Enter your name" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="orderEmail">Email</label>
+                                <input type="email" id="orderEmail" name="orderEmail" placeholder="your@email.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="orderPhone">Phone</label>
+                                <input type="tel" id="orderPhone" name="orderPhone" placeholder="+91 1234567890">
+                            </div>
+                        </div>
+
+                        <!-- Food Items Section -->
+                        <div class="form-group">
+                            <label for="quickFoodItem">Add Food Items to Order *</label>
+                            <div class="food-item-selector">
+                                <select id="quickFoodItem" name="quickFoodItem">
+                                    <option value="">Select a dish...</option>
+                                    <optgroup label="Starters & Soups">
+                                        <option data-price="150">Crispy French Fries - ₹150</option>
+                                        <option data-price="180">Honey Chilli Potatoes - ₹180</option>
+                                        <option data-price="200">Chicken Lollipop - ₹200</option>
+                                        <option data-price="220">Drums of Heaven - ₹220</option>
+                                        <option data-price="210">Fish Fingers - ₹210</option>
+                                        <option data-price="140">Sweet Corn - ₹140</option>
+                                        <option data-price="190">Crispy Chilly Baby Corn - ₹190</option>
+                                        <option data-price="280">Golden Fried Prawns - ₹280</option>
+                                        <option data-price="160">Veg/Paneer/Chicken Pakoda - ₹160</option>
+                                        <option data-price="250">Kaju Fry - ₹250</option>
+                                        <option data-price="120">Veg/Chicken Soup - ₹120</option>
+                                        <option data-price="140">Mushroom Soup - ₹140</option>
+                                        <option data-price="160">Chicken Mushroom Soup - ₹160</option>
+                                    </optgroup>
+                                    <optgroup label="Curry & Main Course">
+                                        <option data-price="280">Chicken Curry - ₹280</option>
+                                        <option data-price="300">Kadai Chicken - ₹300</option>
+                                        <option data-price="320">Chicken Butter Masala - ₹320</option>
+                                        <option data-price="290">Chicken Schezwan - ₹290</option>
+                                        <option data-price="280">Chicken Manchurian - ₹280</option>
+                                        <option data-price="270">Chicken Chilly - ₹270</option>
+                                        <option data-price="310">Chicken Dry Fry - ₹310</option>
+                                        <option data-price="260">Sahi Paneer - ₹260</option>
+                                        <option data-price="240">Paneer Makhani - ₹240</option>
+                                        <option data-price="220">Matar Paneer - ₹220</option>
+                                        <option data-price="250">Butter Masala (Paneer) - ₹250</option>
+                                        <option data-price="270">Kadai Paneer - ₹270</option>
+                                        <option data-price="380">Mutton Curry - ₹380</option>
+                                        <option data-price="400">Mutton Rogan Josh - ₹400</option>
+                                        <option data-price="200">Mixed Veg (with Mushroom) - ₹200</option>
+                                    </optgroup>
+                                    <optgroup label="Sandwiches & Burgers">
+                                        <option data-price="180">Chicken Cheese Sandwich - ₹180</option>
+                                        <option data-price="170">Grilled Sandwich (Veg/Chicken) - ₹170</option>
+                                        <option data-price="190">Peri Peri Sandwich - ₹190</option>
+                                        <option data-price="140">Egg Sandwich - ₹140</option>
+                                        <option data-price="120">Veg Sandwich - ₹120</option>
+                                        <option data-price="220">Chicken Cheese Burger - ₹220</option>
+                                        <option data-price="180">Veg Cheese Burger - ₹180</option>
+                                        <option data-price="160">Egg Burger - ₹160</option>
+                                        <option data-price="240">Garlic Lover's Burger - ₹240</option>
+                                        <option data-price="150">Veg Burger - ₹150</option>
+                                    </optgroup>
+                                    <optgroup label="Wraps & Rolls">
+                                        <option data-price="140">Spring Roll (Veg/Chicken) - ₹140</option>
+                                        <option data-price="190">Chicken Cheese Roll - ₹190</option>
+                                        <option data-price="160">Chicken Roll - ₹160</option>
+                                        <option data-price="130">Veg Roll - ₹130</option>
+                                        <option data-price="120">Egg Roll - ₹120</option>
+                                    </optgroup>
+                                    <optgroup label="Sea Food">
+                                        <option data-price="380">Octopus Grilled with Garlic - ₹380</option>
+                                        <option data-price="350">Octopus Chilli - ₹350</option>
+                                        <option data-price="320">Prawn Chilli - ₹320</option>
+                                        <option data-price="340">Prawn Grilled with Garlic - ₹340</option>
+                                        <option data-price="300">Squid Chilli - ₹300</option>
+                                        <option data-price="500">Squid & Octopus Platter - ₹500</option>
+                                    </optgroup>
+                                    <optgroup label="Desserts">
+                                        <option data-price="150">Fruit Salad - ₹150</option>
+                                        <option data-price="180">Custard with Ice Cream - ₹180</option>
+                                        <option data-price="120">Chocolate Ice Cream - ₹120</option>
+                                        <option data-price="130">Butter Scotch Ice Cream - ₹130</option>
+                                        <option data-price="100">Vanilla Ice Cream - ₹100</option>
+                                        <option data-price="120">Strawberry Ice Cream - ₹120</option>
+                                    </optgroup>
+                                    <optgroup label="Drinks">
+                                        <option data-price="150">Virgin Mojito - ₹150</option>
+                                        <option data-price="160">Blue Lagoon - ₹160</option>
+                                        <option data-price="160">Mint Mojito - ₹160</option>
+                                        <option data-price="120">Mint Lime Soda - ₹120</option>
+                                        <option data-price="140">Green Apple - ₹140</option>
+                                        <option data-price="80">Pepsi/Sprite - ₹80</option>
+                                        <option data-price="120">Red Bull - ₹120</option>
+                                        <option data-price="140">Milk Shake - ₹140</option>
+                                        <option data-price="140">Vanilla Shake - ₹140</option>
+                                        <option data-price="140">Strawberry Shake - ₹140</option>
+                                        <option data-price="140">Chocolate Shake - ₹140</option>
+                                        <option data-price="150">Butter Scotch Shake - ₹150</option>
+                                        <option data-price="170">Pina Colada - ₹170</option>
+                                        <option data-price="120">Sweet Lassi - ₹120</option>
+                                        <option data-price="100">Red Tea - ₹100</option>
+                                        <option data-price="100">Lemon Tea - ₹100</option>
+                                        <option data-price="120">Milk Tea - ₹120</option>
+                                        <option data-price="110">Green Tea - ₹110</option>
+                                        <option data-price="130">Honey Ginger Tea - ₹130</option>
+                                        <option data-price="130">Milk Coffee - ₹130</option>
+                                        <option data-price="100">Espresso - ₹100</option>
+                                        <option data-price="140">Cappuccino - ₹140</option>
+                                        <option data-price="130">Latte - ₹130</option>
+                                        <option data-price="150">Cold Coffee - ₹150</option>
+                                    </optgroup>
+                                </select>
+                                <div class="quantity-control">
+                                    <input type="number" id="quickFoodQuantity" name="quickFoodQuantity" min="1" value="1" placeholder="Qty">
+                                    <button type="button" id="quickAddFoodBtn" class="btn btn-small">Add to Order</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Order Items List -->
+                        <div id="quickOrderedItemsContainer" class="ordered-items-container" style="display: none;">
+                            <h4>📋 Your Order</h4>
+                            <ul id="quickOrderedItemsList" class="ordered-items-list"></ul>
+                            <button type="button" id="quickClearOrderBtn" class="btn btn-small btn-outline">Clear Order</button>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-full">Place Order via WhatsApp</button>
+                    </form>
+                    <div class="form-success" id="quickOrderSuccess">
+                        <div class="success-icon">✓</div>
+                        <h4>Order Sent Successfully!</h4>
+                        <p>We've received your order. Check your WhatsApp for confirmation!</p>
                     </div>
                 </div>
             </div>
