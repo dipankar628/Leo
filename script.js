@@ -145,12 +145,127 @@ document.addEventListener('DOMContentLoaded', () => {
     // Example: India = 91, so 91XXXXXXXXXX
     const WHATSAPP_NUMBER = '917002025251';
 
+    // Order items storage
+    let orderedItems = [];
+
     // Set minimum date to today
     const dateInput = document.getElementById('resDate');
     if (dateInput) {
         const today = new Date().toISOString().split('T')[0];
         dateInput.setAttribute('min', today);
     }
+
+    // ========== FOOD ITEM MANAGEMENT ==========
+    const foodItemSelect = document.getElementById('foodItem');
+    const foodQuantityInput = document.getElementById('foodQuantity');
+    const addFoodBtn = document.getElementById('addFoodBtn');
+    const orderedItemsList = document.getElementById('orderedItemsList');
+    const orderedItemsContainer = document.getElementById('orderedItemsContainer');
+    const clearOrderBtn = document.getElementById('clearOrderBtn');
+
+    // Add food item to order
+    addFoodBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        const selectedOption = foodItemSelect.options[foodItemSelect.selectedIndex];
+        const foodItem = selectedOption.text.split(' - ')[0].trim(); // Extract name without price
+        const price = parseInt(selectedOption.getAttribute('data-price')) || 0;
+        const quantity = parseInt(foodQuantityInput.value) || 1;
+
+        if (!foodItem || !price) {
+            alert('Please select a food item');
+            return;
+        }
+
+        // Check if item already exists in order
+        const existingItem = orderedItems.find(item => item.name === foodItem);
+        
+        if (existingItem) {
+            existingItem.quantity += quantity;
+        } else {
+            orderedItems.push({ name: foodItem, price: price, quantity: quantity });
+        }
+
+        // Reset the selectors
+        foodItemSelect.value = '';
+        foodQuantityInput.value = '1';
+
+        // Update the display
+        updateOrderDisplay();
+    });
+
+    // Allow adding items with Enter key
+    foodQuantityInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            addFoodBtn.click();
+        }
+    });
+
+    // Calculate total bill
+    function calculateTotal() {
+        return orderedItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+    }
+
+    // Update the order items display
+    function updateOrderDisplay() {
+        if (orderedItems.length === 0) {
+            orderedItemsContainer.style.display = 'none';
+            return;
+        }
+
+        orderedItemsContainer.style.display = 'block';
+        orderedItemsList.innerHTML = '';
+
+        orderedItems.forEach((item, index) => {
+            const itemTotal = item.price * item.quantity;
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span class="item-name">${item.name}</span>
+                <span class="item-qty">× ${item.quantity}</span>
+                <span class="item-price">₹${itemTotal}</span>
+                <button type="button" class="remove-item" data-index="${index}">✕</button>
+            `;
+            orderedItemsList.appendChild(li);
+        });
+
+        // Add bill summary (remove old one if exists)
+        const existingBillSummary = orderedItemsList.parentNode.querySelector('.bill-summary');
+        if (existingBillSummary) {
+            existingBillSummary.remove();
+        }
+        
+        const total = calculateTotal();
+        const billSummary = document.createElement('div');
+        billSummary.className = 'bill-summary';
+        billSummary.innerHTML = `
+            <div class="bill-row">
+                <span>Subtotal:</span>
+                <span>₹${total}</span>
+            </div>
+            <div class="bill-total">
+                <span>💰 Total Bill:</span>
+                <span>₹${total}</span>
+            </div>
+        `;
+        orderedItemsList.parentNode.insertBefore(billSummary, clearOrderBtn);
+
+        // Add event listeners to remove buttons
+        document.querySelectorAll('.remove-item').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const index = parseInt(btn.getAttribute('data-index'));
+                orderedItems.splice(index, 1);
+                updateOrderDisplay();
+            });
+        });
+    }
+
+    // Clear entire order
+    clearOrderBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        orderedItems = [];
+        updateOrderDisplay();
+    });
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -193,8 +308,26 @@ document.addEventListener('DOMContentLoaded', () => {
         message += `📅 *Date:* ${formattedDate}\n`;
         message += `🕐 *Time:* ${hour12}\n`;
         message += `👥 *Guests:* ${guests}\n`;
+        
+        // Add ordered items if any
+        if (orderedItems.length > 0) {
+            message += `\n💳 *ORDER BILL* 💳\n`;
+            message += `${'─'.repeat(40)}\n`;
+            
+            let totalBill = 0;
+            orderedItems.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                totalBill += itemTotal;
+                message += `${item.name}\n`;
+                message += `  ₹${item.price} × ${item.quantity} = ₹${itemTotal}\n`;
+            });
+            
+            message += `${'─'.repeat(40)}\n`;
+            message += `💰 *Total Bill: ₹${totalBill}*\n`;
+        }
+        
         if (specialReqs) {
-            message += `📝 *Special Requests:* ${specialReqs}\n`;
+            message += `\n📝 *Special Requests:* ${specialReqs}\n`;
         }
         message += `\n_Sent from leocaverestro.com_`;
 
@@ -214,6 +347,8 @@ document.addEventListener('DOMContentLoaded', () => {
             form.reset();
             form.style.display = 'block';
             formSuccess.classList.remove('active');
+            orderedItems = [];
+            updateOrderDisplay();
         }, 8000);
     });
 
