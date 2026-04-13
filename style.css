@@ -399,7 +399,7 @@ a:hover {
 
 .hero-scroll {
     position: absolute;
-    bottom: 30px;
+    bottom: 3px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 2;
@@ -649,13 +649,27 @@ a:hover {
     border: 1px solid var(--clr-surface-3);
     border-radius: var(--radius);
     padding: var(--space-md);
-    transition: all var(--transition);
+    transition: border-color var(--transition), box-shadow var(--transition);
+    overflow: hidden;
+}
+
+.menu-item img {
+    width: 100%;
+    height: auto;
+    transition: transform var(--transition-slow);
+    border-radius: 8px;
+    margin-bottom: var(--space-sm);
+    display: block;
 }
 
 .menu-item:hover {
     border-color: var(--clr-gold);
     box-shadow: var(--glow-gold);
     transform: translateY(-2px);
+}
+
+.menu-item:hover img {
+    transform: scale(1.08);
 }
 
 .menu-item-header {
@@ -1197,6 +1211,47 @@ a:hover {
 
 .btn-outline:hover {
     background: rgba(200, 164, 90, 0.1);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, var(--clr-gold), var(--clr-gold-light));
+    color: var(--clr-black);
+    font-weight: 600;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(200, 164, 90, 0.3);
+}
+
+/* =============================================
+   QUICK ORDER SECTION
+   ============================================= */
+.order-section {
+    padding: var(--space-xl) 0;
+    background: var(--clr-surface);
+}
+
+.order-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+}
+
+.order-form {
+    background: var(--clr-surface);
+    border: 1px solid var(--clr-surface-2);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow);
+}
+
+.order-form h3 {
+    font-family: var(--ff-heading);
+    font-size: var(--fs-h3);
+    color: var(--clr-cream);
+    text-align: center;
+    margin-bottom: var(--space-md);
 }
 
 /* =============================================
