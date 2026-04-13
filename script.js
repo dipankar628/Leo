@@ -352,6 +352,189 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 8000);
     });
 
+    // ========== QUICK ORDER FORM (WhatsApp Integration) ==========
+    const quickOrderForm = document.getElementById('quickOrderForm');
+    const quickOrderSuccess = document.getElementById('quickOrderSuccess');
+    let quickOrderedItems = [];
+
+    const quickFoodItemSelect = document.getElementById('quickFoodItem');
+    const quickFoodQuantityInput = document.getElementById('quickFoodQuantity');
+    const quickAddFoodBtn = document.getElementById('quickAddFoodBtn');
+    const quickOrderedItemsList = document.getElementById('quickOrderedItemsList');
+    const quickOrderedItemsContainer = document.getElementById('quickOrderedItemsContainer');
+    const quickClearOrderBtn = document.getElementById('quickClearOrderBtn');
+
+    // Add food item to quick order
+    quickAddFoodBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        const selectedOption = quickFoodItemSelect.options[quickFoodItemSelect.selectedIndex];
+        const foodItem = selectedOption.text.split(' - ')[0].trim();
+        const price = parseInt(selectedOption.getAttribute('data-price')) || 0;
+        const quantity = parseInt(quickFoodQuantityInput.value) || 1;
+
+        if (!foodItem || !price) {
+            alert('Please select a food item');
+            return;
+        }
+
+        const existingItem = quickOrderedItems.find(item => item.name === foodItem);
+        
+        if (existingItem) {
+            existingItem.quantity += quantity;
+        } else {
+            quickOrderedItems.push({ name: foodItem, price: price, quantity: quantity });
+        }
+
+        quickFoodItemSelect.value = '';
+        quickFoodQuantityInput.value = '1';
+
+        updateQuickOrderDisplay();
+    });
+
+    // Allow adding items with Enter key
+    quickFoodQuantityInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            quickAddFoodBtn.click();
+        }
+    });
+
+    // Calculate total for quick order
+    function calculateQuickTotal() {
+        return quickOrderedItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+    }
+
+    // Update quick order display
+    function updateQuickOrderDisplay() {
+        if (quickOrderedItems.length === 0) {
+            quickOrderedItemsContainer.style.display = 'none';
+            return;
+        }
+
+        quickOrderedItemsContainer.style.display = 'block';
+        quickOrderedItemsList.innerHTML = '';
+
+        quickOrderedItems.forEach((item, index) => {
+            const itemTotal = item.price * item.quantity;
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span class="item-name">${item.name}</span>
+                <span class="item-qty">× ${item.quantity}</span>
+                <span class="item-price">₹${itemTotal}</span>
+                <button type="button" class="remove-item" data-index="${index}">✕</button>
+            `;
+            quickOrderedItemsList.appendChild(li);
+        });
+
+        // Add bill summary (remove old one if exists)
+        const existingBillSummary = quickOrderedItemsList.parentNode.querySelector('.bill-summary');
+        if (existingBillSummary) {
+            existingBillSummary.remove();
+        }
+        
+        const total = calculateQuickTotal();
+        const billSummary = document.createElement('div');
+        billSummary.className = 'bill-summary';
+        billSummary.innerHTML = `
+            <div class="bill-row">
+                <span>Subtotal:</span>
+                <span>₹${total}</span>
+            </div>
+            <div class="bill-total">
+                <span>💰 Total Bill:</span>
+                <span>₹${total}</span>
+            </div>
+        `;
+        quickOrderedItemsList.parentNode.insertBefore(billSummary, quickClearOrderBtn);
+
+        // Add event listeners to remove buttons
+        document.querySelectorAll('.remove-item').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const index = parseInt(btn.getAttribute('data-index'));
+                quickOrderedItems.splice(index, 1);
+                updateQuickOrderDisplay();
+            });
+        });
+    }
+
+    // Clear entire quick order
+    quickClearOrderBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        quickOrderedItems = [];
+        updateQuickOrderDisplay();
+    });
+
+    // Quick order form submission
+    quickOrderForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById('orderName').value.trim();
+        const email = document.getElementById('orderEmail').value.trim();
+        const phone = document.getElementById('orderPhone').value.trim();
+
+        // Validation
+        if (!name) {
+            alert('Name is required');
+            return;
+        }
+
+        if (quickOrderedItems.length === 0) {
+            alert('Please add at least one item to your order');
+            return;
+        }
+
+        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            alert('Please enter a valid email');
+            return;
+        }
+
+        // Build WhatsApp message
+        let message = `🦁 *LEO CAVE RESTRO — Quick Order* 🦁\n\n`;
+        message += `👤 *Name:* ${name}\n`;
+        if (email) {
+            message += `📧 *Email:* ${email}\n`;
+        }
+        if (phone) {
+            message += `📞 *Phone:* ${phone}\n`;
+        }
+        
+        message += `\n💳 *ORDER DETAILS* 💳\n`;
+        message += `${'─'.repeat(40)}\n`;
+        
+        let totalBill = 0;
+        quickOrderedItems.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            totalBill += itemTotal;
+            message += `${item.name}\n`;
+            message += `  ₹${item.price} × ${item.quantity} = ₹${itemTotal}\n`;
+        });
+        
+        message += `${'─'.repeat(40)}\n`;
+        message += `💰 *Total Bill: ₹${totalBill}*\n`;
+        message += `\n_Sent from leocaverestro.com_`;
+
+        // Encode and open WhatsApp
+        const encodedMessage = encodeURIComponent(message);
+        const whatsappURL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+
+        // Open WhatsApp in a new tab
+        window.open(whatsappURL, '_blank');
+
+        // Show success state
+        quickOrderForm.style.display = 'none';
+        quickOrderSuccess.classList.add('active');
+
+        // Reset after 8 seconds
+        setTimeout(() => {
+            quickOrderForm.reset();
+            quickOrderForm.style.display = 'block';
+            quickOrderSuccess.classList.remove('active');
+            quickOrderedItems = [];
+            updateQuickOrderDisplay();
+        }, 8000);
+    });
+
 
     // ========== SMOOTH SCROLL FOR ANCHOR LINKS ==========
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
